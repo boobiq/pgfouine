@@ -40,15 +40,12 @@ class CsvQueriesHistoryReport extends Report {
 		$this->Report($reportAggregator, 'Queries history in CSV format', array('QueriesHistoryListener'), false);
 	}
 	
-	function getText() {
+	function dumpText($file) {
 		$listener =& $this->reportAggregator->getListener('QueriesHistoryListener');
-		$text = '';
 		
 		$queries =& $listener->getQueriesHistory();
-		$count = count($queries);
-		for($i = 0; $i < $count; $i++) {
-			$query =& $queries[$i];
-			
+		$i = 0;
+		foreach ($queries as $query) {
 			$line = array(
 				$i+1,
 				$this->formatTimestamp($query->getTimestamp()),
@@ -58,18 +55,14 @@ class CsvQueriesHistoryReport extends Report {
 				$query->getDuration(),
 				$query->getText(),
 			);
-			
-			$text .= str_putcsv($line, ',', '"');
-			
-			unset($query);
+			$line = str_putcsv($line, ',', '"');
+			fwrite($file, $line);
+			$i += 1;
 		}
-		return rtrim($text, "\n");
 	}
 	
-	function getHtml() {
-		$html = '<p>Report not supported by HTML format</p>';
-		
-		return $html;
+	function getHtml($file) {
+		fwrite($file, '<p>Report not supported by HTML format</p>');
 	}
 }
 

@@ -29,13 +29,13 @@ class HtmlWithGraphsReportAggregator extends HtmlReportAggregator {
 		$this->HtmlReportAggregator($logReader, $outputFilePath);
 	}
 	
-	function getHtmlOutput(& $reportBlock) {
+	protected function dumpHtmlOutput($file, $reportBlock) {
 		if(method_exists($reportBlock, 'getHtmlWithGraphs')) {
 			$html = $reportBlock->getHtmlWithGraphs();
+			fwrite($file, $html);
 		} else {
-			$html = $reportBlock->getHtml();
+			$reportBlock->dumpHtml($file);
 		}
-		return $html;
 	}
 
 	function getImagePath($imageName) {

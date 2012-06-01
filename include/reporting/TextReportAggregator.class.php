@@ -28,20 +28,18 @@ class TextReportAggregator extends ReportAggregator {
 	}
 	
 	function getHeader() {
+		return '';
 	}
 	
 	function getFooter() {
+		return '';
 	}
 	
-	function getBody() {
-		$count = count($this->reportBlocks);
-		$output = '';
-		for($i = 0; $i < $count; $i++) {
-			$output .= $this->reportBlocks[$i]->getTextTitle();
-			$output .= $this->reportBlocks[$i]->getText();
-			$output .= "\n";
+	function dumpBody($file) {
+		foreach($this->reportBlocks as $block) {
+			$block->dumpText($file);
+			fwrite($file, "\n");
 		}
-		return $output;
 	}
 }
 

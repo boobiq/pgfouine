@@ -24,51 +24,101 @@
 class QueriesHistoryListener extends QueryListener {
 	var $queries = array();
 	var $counter = 0;
-	
-	function fireEvent(& $logObject) {
+	var $bulk = 10000;
+
+	function __construct() {
+		$this->dbFile = tempnam(sys_get_temp_dir(), 'pgfouine-history');
+		$this->db = new SQLite3($this->dbFile);
+		$this->db->exec('CREATE TABLE log (timestamp INTEGER, connection_id INTEGER, data BLOB)');
+		$this->db->exec('BEGIN');
+		$this->inTransaction = true;
+	}
+
+	function __destruct() {
+		unlink($this->dbFile);
+	}
+
+	private function ensureCommit() {
+		if ($this->inTransaction) {
+			$this->db->exec('COMMIT');
+			$this->inTransaction = false;
+		}
+	}
+
+	function fireEvent($logObject) {
 		$this->counter ++;
 		$logObject->setNumber($this->counter);
-		$this->queries[] =& $logObject;
-	}
-	
-	function & getQueriesHistory() {
-		usort($this->queries, array($this, 'compareTimestamp'));
-		return $this->queries;
-	}
-	
-	function & getQueriesHistoryPerConnection() {
-		usort($this->queries, array($this, 'compareConnectionId'));
-		return $this->queries;
-	}
-	
-	function compareConnectionId(& $a, & $b) {
-		if($a->getConnectionId() == $b->getConnectionId()) {
-			return $this->compareTimestamp($a, $b);
-		} elseif($a->getConnectionId() < $b->getConnectionId()) {
-			return -1;
-		} else {
-			return 1;
+
+		$stmt = $this->db->prepare('INSERT INTO log VALUES (:timestamp, :connection_id, :data)');
+		$stmt->bindValue(':timestamp', $logObject->getTimestamp(), SQLITE3_INTEGER);
+		$stmt->bindValue(':connection_id', $logObject->getConnectionId(), SQLITE3_INTEGER);
+		$stmt->bindValue(':data', serialize($logObject), SQLITE3_BLOB);
+		$stmt->execute();
+
+		if (($this->counter % $this->bulk) == 0) {
+			$this->db->exec('COMMIT');
+			$this->db->exec('BEGIN');
 		}
 	}
 	
-	function compareTimestamp(& $a, & $b) {
-		if($a->getTimestamp() == $b->getTimestamp()) {
-			return $this->compareNumber($a, $b);
-		} elseif($a->getTimestamp() < $b->getTimestamp()) {
-			return -1;
-		} else {
-			return 1;
-		}
+	function getQueriesHistory() {
+		$this->ensureCommit();
+		$this->db->exec('CREATE INDEX IF NOT EXISTS idx_log_timestamp ON log (timestamp ASC)');
+		$result = $this->db->query('SELECT data FROM log ORDER BY timestamp ASC');
+		return new DBResultIterator($result);
 	}
 	
-	function compareNumber(& $a, & $b) {
-		if($a->getNumber() == $b->getNumber()) {
-			return 0;
-		} elseif($a->getNumber() < $b->getNumber()) {
-			return -1;
-		} else {
-			return 1;
+	function getQueriesHistoryPerConnection() {
+		$this->ensureCommit();
+		$this->db->exec('CREATE INDEX IF NOT EXISTS idx_log_conn_id ON log (connection_id ASC)');
+		$result = $this->db->query('SELECT data FROM log ORDER BY connection_id ASC');
+		return new DBResultIterator($result);
+	}
+}
+
+class DBResultIterator implements Iterator {
+	function __construct($result) {
+		$this->result = $result;
+		$this->valueSet = false;
+		$this->value = null;
+		$this->position = 0;
+	}
+
+	function rewind() {
+		$this->result->reset();
+		$this->position = 0;
+	}
+
+	function current() {
+		if (!$this->valueSet) {
+			$this->next();
 		}
+		return $this->value;
+	}
+
+	function key() {
+		return $this->position;
+	}
+
+	function next() {
+		$row = $this->result->fetchArray(SQLITE3_NUM);
+		if ($row === false) {
+			$this->value = null;
+			$this->valid = false;
+		} else {
+			$this->valid = true;
+			$this->value = unserialize(reset($row));
+			$this->position++;
+		}
+		$this->valueSet = true;
+	}
+
+	function valid() {
+		if (!$this->valueSet) {
+			$this->next();
+		}
+
+		return $this->valid;
 	}
 }
 

@@ -40,26 +40,20 @@ class ReportAggregator {
 		return $this->logReader->getListener($listenerName);
 	}
 	
-	function getOutput() {
-		$output = '';
-		$output .= $this->getHeader();
-		$output .= $this->getBody();
-		$output .= $this->getFooter();
-		
-		return $output;
-	}
-	
 	function output() {
-		if($this->outputFilePath) {
-			$outputFilePointer = @fopen($this->outputFilePath, 'w');
-			if($outputFilePointer) {
-				fwrite($outputFilePointer, $this->getOutput());
-				fclose($outputFilePointer);
-			} else {
-				stderr('cannot open file '.$this->outputFilePath.' for writing');
-			}
+		if ($this->outputFilePath) {
+			$file = fopen($this->outputFilePath + '.tmp', 'w');
 		} else {
-			echo $this->getOutput();
+			$file = STDOUT;
+		}
+
+		fwrite($file, $this->getHeader());
+		$this->dumpBody($file);
+		fwrite($file, $this->getFooter());
+
+		if ($this->outputFilePath) {
+			fclose($file);
+			rename($this->outputFilePath + '.tmp', $this->outputFilePath);
 		}
 	}
 	
