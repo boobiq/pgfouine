@@ -208,6 +208,7 @@ $outputToFiles = false;
 $supportedReportBlocks = array(
 	'overall' => 'OverallStatsReport',
 	'bytype' => 'QueriesByTypeReport',
+	'n-burden' => 'BurdenQueriesReport',
 	'hourly' => 'HourlyStatsReport',
 	'slowest' => 'SlowestQueriesReport',
 	'n-mosttime' => 'NormalizedQueriesMostTimeReport',
@@ -219,7 +220,7 @@ $supportedReportBlocks = array(
 	'tsung' => 'TsungSessionsReport',
 	'csv-query' => 'CsvQueriesHistoryReport'
 );
-$defaultReportBlocks = array('overall', 'bytype', 'n-mosttime', 'slowest', 'n-mostfrequent', 'n-slowestaverage');
+$defaultReportBlocks = array('overall', 'bytype', 'n-burden', 'n-mosttime', 'slowest', 'n-mostfrequent', 'n-slowestaverage');
 
 $reports = array();
 if(isset($options['reports'])) {

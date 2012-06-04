@@ -38,6 +38,7 @@ require_once('reports/NormalizedReport.class.php');
 require_once('reports/NormalizedQueriesMostTimeReport.class.php');
 require_once('reports/NormalizedQueriesMostFrequentReport.class.php');
 require_once('reports/NormalizedQueriesSlowestAverageReport.class.php');
+require_once('reports/BurdenQueriesReport.class.php');
 require_once('reports/QueriesHistoryReport.class.php');
 require_once('reports/QueriesHistoryPerPidReport.class.php');
 require_once('reports/TsungSessionsReport.class.php');
