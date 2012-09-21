@@ -26,18 +26,14 @@ class NormalizedErrorsMostFrequentReport extends NormalizedErrorsReport {
 		$this->NormalizedErrorsReport($reportAggregator, 'Most frequent errors');
 	}
 	
-	function getText() {
+	function dumpText($file) {
 		$listener =& $this->reportAggregator->getListener('NormalizedErrorsListener');
-		$text = '';
 		
 		$errors =& $listener->getMostFrequentErrors();
 		
-		$count = count($errors);
-		
-		for($i = 0; $i < $count; $i++) {
-			$error =& $errors[$i];
-			
-			$text .= ($i+1).') '.$this->formatInteger($error->getTimesExecuted()).' - '.$error->getNormalizedText()."\n";
+		$i = 0;
+		foreach ($errors as $error) {
+			$text = ($i+1).') '.$this->formatInteger($error->getTimesExecuted()).' - '.$error->getNormalizedText()."\n";
 			if($error->isTextAStatement()) {
 				$text .= 'Error: '.$error->getError()."\n";
 			}
@@ -48,30 +44,31 @@ class NormalizedErrorsMostFrequentReport extends NormalizedErrorsReport {
 				$text .= 'Hint: '.$error->getHint()."\n";
 			}
 			$text .= "--\n";
+			fwrite($file, $text);
+			$i++;
 		}
-		return $text;
 	}
 	
-	function getHtml() {
+	function dumpHtml($file) {
 		$listener =& $this->reportAggregator->getListener('NormalizedErrorsListener');
 		$errors =& $listener->getMostFrequentErrors();
-		$count = count($errors);
+		$found = false;
 		
-		if($count == 0) {
-			$html = '<p>No error found</p>';
-		} else {
-			$html = '
+		if(true) {
+			$i = 0;
+			foreach ($errors as $error) {
+				if (!$found) {
+					$found = true;
+					fwrite($file, '
 <table class="queryList">
 	<tr>
 		<th>Rank</th>
 		<th>Times reported</th>
 		<th>Error</th>
-	</tr>';
-		
-			for($i = 0; $i < $count; $i++) {
-				$error =& $errors[$i];
+	</tr>');
+				}
 				
-				$html .= '<tr class="'.$this->getRowStyle($i).'">
+				$html = '<tr class="'.$this->getRowStyle($i).'">
 					<td class="center top">'.($i+1).'</td>
 					<td class="relevantInformation top center"><div class="tooltipLink"><span class="information">'.$this->formatInteger($error->getTimesExecuted()).'</span>'.$this->getHourlyStatisticsTooltip($error).'</div></td>
 					<td><div class="error">Error: '.htmlspecialchars($error->getError()).'</div>';
@@ -93,10 +90,15 @@ class NormalizedErrorsMostFrequentReport extends NormalizedErrorsReport {
 				$html .= $this->getNormalizedErrorWithExamplesHtml($i, $error).'</td>
 				</tr>';
 				$html .= "\n";
+				fwrite($file, $html);
+				$i += 1;
 			}
-			$html .= '</table>';
+			if (!$found) {
+				fwrite($file, '<p>No error found</p>');
+			} else {
+				fwrite($file, '</table>');
+			}
 		}
-		return $html;
 	}
 }
 

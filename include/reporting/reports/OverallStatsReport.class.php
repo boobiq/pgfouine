@@ -26,7 +26,7 @@ class OverallStatsReport extends Report {
 		$this->Report($reportAggregator, 'Overall statistics', array('GlobalCountersListener'));
 	}
 	
-	function getText() {
+	function dumpText($file) {
 		$statsListener =& $this->reportAggregator->getListener('GlobalCountersListener');
 		$normalizedListener =& $this->reportAggregator->getListener('NormalizedQueriesListener');
 		$errorCountersListener =& $this->reportAggregator->getListener('GlobalErrorCountersListener');
@@ -47,11 +47,10 @@ class OverallStatsReport extends Report {
 				$text .= 'Number of unique normalized errors: '.$this->formatInteger($normalizedErrorsListener->getUniqueErrorCount())."\n";
 			}
 		}
-		
-		return $text;
+		fwrite($file, $text);
 	}
 	
-	function getHtml() {
+	function dumpHtml($file) {
 		$statsListener =& $this->reportAggregator->getListener('GlobalCountersListener');
 		$normalizedListener =& $this->reportAggregator->getListener('NormalizedQueriesListener');
 		$errorCountersListener =& $this->reportAggregator->getListener('GlobalErrorCountersListener');
@@ -89,8 +88,8 @@ class OverallStatsReport extends Report {
 			}
 		}
 		$html .= '</ul>';
-		
-		return $html;
+
+		fwrite($file, $html);
 	}
 	
 	function walkFormatTimestamp(& $value, $key) {

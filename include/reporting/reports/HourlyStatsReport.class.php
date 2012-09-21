@@ -26,15 +26,12 @@ class HourlyStatsReport extends Report {
 		$this->Report($reportAggregator, 'Hourly statistics', array('HourlyCountersListener'));
 	}
 	
-	function getText() {
-		$statsListener =& $this->reportAggregator->getListener('HourlyCountersListener');
-		
+	function dumpText($file) {
 		$text = 'Report not supported by text format'."\n";
-
-		return $text;
+		fwrite($file, $text);
 	}
 	
-	function getHtml() {
+	function dumpHtml($file) {
 		$statsListener =& $this->reportAggregator->getListener('HourlyCountersListener');
 		$hourlyStatistics =& $statsListener->getHourlyStatistics();
 		
@@ -60,6 +57,7 @@ class HourlyStatsReport extends Report {
 		<th style="width: 10%">DELETE</th>
 		<th style="width: 10%">Av.&nbsp;duration&nbsp;('.CONFIG_DURATION_UNIT.')</th>
 	</tr>';
+		fwrite($file, $html);
 		
 		$previousDay = '';
 		for($i = 0; $i < $hourCount; $i++) {
@@ -95,7 +93,7 @@ class HourlyStatsReport extends Report {
 				$writeDuration = '&nbsp;';
 			}
 			
-			$html .= '
+			$html = '
 	<tr class="'.$this->getRowStyle($i).'">
 		<td>'.$day.'</td>
 		<td>'.date('ga', $hourTimestamp).'</td>
@@ -109,21 +107,22 @@ class HourlyStatsReport extends Report {
 		<td class="right">'.$this->formatDuration($writeDuration).'</td>
 	</tr>
 			';
+			fwrite($file, $html);
 		}
 		
-		$html .= '
+		$html = '
 </table>';
-		
-		return $html;
+		fwrite($file, $html);
 	}
 
-	function getHtmlWithGraphs() {
+	function dumpHtmlWithGraphs($file) {
 		$statsListener =& $this->reportAggregator->getListener('HourlyCountersListener');
 
 		$graphsGenerated = $this->generateGraphs($statsListener);
 
-		$html = $this->getHtml();
+		$this->dumpHtml($file);
 		
+		$html = '';
 		if(in_array('hourly_queries_per_second', $graphsGenerated)) {
 			$html .= '<p><img src="'.$this->reportAggregator->getImageBaseName('hourly_queries_per_second').'" alt="Queries per second" /></p>';
 		}
@@ -136,8 +135,7 @@ class HourlyStatsReport extends Report {
 		if(in_array('hourly_write_queries', $graphsGenerated)) {
 			$html .= '<p><img src="'.$this->reportAggregator->getImageBaseName('hourly_write_queries').'" alt="Hourly write queries" /></p>';
 		}
-
-		return $html;
+		fwrite($file, $html);
 	}
 	
 	function generateGraphs(& $statsListener) {

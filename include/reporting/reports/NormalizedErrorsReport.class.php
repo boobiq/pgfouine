@@ -58,7 +58,6 @@ class NormalizedErrorsReport extends Report {
 			$html .= '</div>';
 		}
 		
-		return $html;
 	}
 	
 	function getHourlyStatisticsTooltip(& $normalizedError) {
@@ -88,7 +87,6 @@ class NormalizedErrorsReport extends Report {
 		}
 		$html .= '</table>';
 		$html .= '</div>';
-		return $html;
 	}
 } 
 

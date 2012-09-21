@@ -26,7 +26,7 @@ class QueriesByTypeReport extends Report {
 		$this->Report($reportAggregator, 'Queries by type', array('GlobalCountersListener'));
 	}
 	
-	function getText() {
+	function dumpText($file) {
 		$listener =& $this->reportAggregator->getListener('GlobalCountersListener');
 		$text = '';
 		
@@ -54,10 +54,11 @@ class QueriesByTypeReport extends Report {
 			$text .= 'DELETE:    '.$this->pad($deleteCount, $pad).'    '.$this->getPercentage($deleteCount, $queriesCount).'%';
 			$text .= "\n";
 		}
-		return $text;
+
+		fwrite($file, $text);
 	}
 	
-	function getHtml() {
+	function dumpHtml($file) {
 		$listener =& $this->reportAggregator->getListener('GlobalCountersListener');
 		
 		$queriesCount = $listener->getIdentifiedQueryCount();
@@ -94,7 +95,8 @@ class QueriesByTypeReport extends Report {
 			$i++;
 		}
 		$html .= '</table>';
-		return $html;
+
+		fwrite($file, $html);
 	}
 }
 

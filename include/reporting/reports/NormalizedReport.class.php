@@ -56,7 +56,6 @@ class NormalizedReport extends Report {
 			$html .= '</div>';
 		}
 			
-		return $html;
 	}
 	
 	function getHourlyStatisticsTooltip(& $normalizedQuery) {
@@ -91,7 +90,6 @@ class NormalizedReport extends Report {
 		}
 		$html .= '</table>';
 		$html .= '</div>';
-		return $html;
 	}
 } 
 

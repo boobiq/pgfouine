@@ -26,18 +26,15 @@ class QueriesHistoryPerPidReport extends Report {
 		$this->Report($reportAggregator, 'Queries history per PID', array('QueriesHistoryListener'));
 	}
 	
-	function getHtml() {
+	function getHtml($file) {
 		$listener =& $this->reportAggregator->getListener('QueriesHistoryListener');
 		
 		$queries =& $listener->getQueriesHistoryPerConnection();
-		$count = count($queries);
 		$currentConnectionId = 0;
-		
-		$html = '';
-		
-		for($i = 0; $i < $count; $i++) {
-			$query =& $queries[$i];
-			
+
+		$i = 0;
+		foreach ($queries as $query) {
+			$html = '';
 			if($currentConnectionId != $query->getConnectionId()) {
 				if($currentConnectionId != 0) {
 					$html .= '</table>';
@@ -63,14 +60,13 @@ class QueriesHistoryPerPidReport extends Report {
 				<td class="top center">'.$this->formatDuration($query->getDuration()).'</td>
 			</tr>';
 			$html .= "\n";
+			fwrite($file, $html);
 			
-			unset($query);
+			$i++;
 		}
 		if($currentConnectionId != 0) {
-			$html .= '</table>';
+			fwrite($file, '</table>');
 		}
-		
-		return $html;
 	}
 }
 

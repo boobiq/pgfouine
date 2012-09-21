@@ -26,23 +26,20 @@ class QueriesHistoryReport extends Report {
 		$this->Report($reportAggregator, 'Queries history', array('QueriesHistoryListener'));
 	}
 	
-	function getText() {
+	function dumpText($file) {
 		$listener =& $this->reportAggregator->getListener('QueriesHistoryListener');
-		$text = '';
 		
 		$queries =& $listener->getQueriesHistory();
-		$count = count($queries);
-		for($i = 0; $i < $count; $i++) {
-			$query =& $queries[$i];
-			$text .= ($i+1).') '.$this->formatTimestamp($query->getTimestamp()).' - '.$this->formatDuration($query->getDuration()).' - '.$this->formatRealQuery($query)."\n";
+		$i = 0;
+		foreach ($queries as $query) {
+			$text = ($i+1).') '.$this->formatTimestamp($query->getTimestamp()).' - '.$this->formatDuration($query->getDuration()).' - '.$this->formatRealQuery($query)."\n";
 			$text .= "--\n";
-			
-			unset($query);
+			fwrite($file, $text);
+			$i++;
 		}
-		return $text;
 	}
 	
-	function getHtml() {
+	function dumpHtml($file) {
 		$listener =& $this->reportAggregator->getListener('QueriesHistoryListener');
 		$html = '
 <table class="queryList">
@@ -52,24 +49,23 @@ class QueriesHistoryReport extends Report {
 		<th>Query</th>
 		<th>Duration&nbsp;('.CONFIG_DURATION_UNIT.')</th>
 	</tr>';
+		fwrite($file, $html);
 		$queries =& $listener->getQueriesHistory();
-		$count = count($queries);
-		for($i = 0; $i < $count; $i++) {
-			$query =& $queries[$i];
+		$i = 0;
+		foreach ($queries as $query) {
 			$title = $query->getDetailedInformation();
 			
-			$html .= '<tr class="'.$this->getRowStyle($i).'">
+			$html = '<tr class="'.$this->getRowStyle($i).'">
 				<td class="center top">'.($i+1).'</td>
 				<td class="top center">'.$this->formatTimestamp($query->getTimestamp()).'</td>
 				<td title="'.$query->getDetailedInformation().'">'.$this->formatRealQuery($query).'</td>
 				<td class="top center">'.$this->formatDuration($query->getDuration()).'</td>
 			</tr>';
 			$html .= "\n";
-			
-			unset($query);
+			fwrite($file, $html);
+			$i++;
 		}
-		$html .= '</table>';
-		return $html;
+		fwrite($file, '</table>');
 	}
 }
 

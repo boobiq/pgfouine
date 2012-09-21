@@ -61,7 +61,7 @@ class CsvQueriesHistoryReport extends Report {
 		}
 	}
 	
-	function getHtml($file) {
+	function dumpHtml($file) {
 		fwrite($file, '<p>Report not supported by HTML format</p>');
 	}
 }

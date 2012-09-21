@@ -26,14 +26,13 @@ class TsungSessionsReport extends Report {
 		$this->Report($reportAggregator, 'Tsung sessions', array('TsungSessionsListener'), false);
 	}
 	
-	function getText() {
+	function dumpText($file) {
 		$listener =& $this->reportAggregator->getListener('TsungSessionsListener');
 		$sessions =& $listener->getSessions();
 		$sessionsCount = count($sessions);
 		$probabilityLeft = 100;
 		
-		$text = '';
-		$text .= '<sessions>'."\n";
+		fwrite($file, '<sessions>'."\n");
 		
 		for($i = 0; $i < $sessionsCount; $i++) {
 			if($i == ($sessionsCount - 1)) {
@@ -46,7 +45,7 @@ class TsungSessionsReport extends Report {
 			$connectionId = key($sessions);
 			$queries =& current($sessions);
 			$queriesCount = count($queries);
-			$text .= "\t".'<session name="pgfouine-'.$connectionId.'" probability="'.$currentProbability.'" type="ts_pgsql">'."\n";
+			$text = "\t".'<session name="pgfouine-'.$connectionId.'" probability="'.$currentProbability.'" type="ts_pgsql">'."\n";
 			
 			for($j = 0; $j < $queriesCount; $j++) {
 				$query =& $queries[$j];
@@ -67,18 +66,16 @@ class TsungSessionsReport extends Report {
 			}
 			
 			$text .= "\t".'</session>'."\n";
+			fwrite($file, $text);
 			next($sessions);
 		}
 		
-		$text .= '</sessions>'."\n";
-
-		return $text;
+		fwrite($file, '</sessions>'."\n");
 	}
 	
-	function getHtml() {
+	function dumpHtml($file) {
 		$html = '<p>Report not supported by HTML format</p>';
-		
-		return $html;
+		fwrite($file, $html);
 	}
 }
 
