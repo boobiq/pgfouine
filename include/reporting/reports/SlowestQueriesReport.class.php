@@ -71,4 +71,3 @@ class SlowestQueriesReport extends Report {
 	}
 }
 
-?>

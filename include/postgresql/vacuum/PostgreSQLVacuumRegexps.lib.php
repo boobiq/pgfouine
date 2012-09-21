@@ -49,4 +49,3 @@ $postgreSQLVacuumRegexps['IndexCleanupDetailLine'] = new RegExp('/(?:([0-9]+) in
 
 $GLOBALS['postgreSQLVacuumRegexps'] =& $postgreSQLVacuumRegexps;
 
-?>

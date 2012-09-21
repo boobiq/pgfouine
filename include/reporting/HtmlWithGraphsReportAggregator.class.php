@@ -56,4 +56,3 @@ class HtmlWithGraphsReportAggregator extends HtmlReportAggregator {
 	}
 }
 
-?>

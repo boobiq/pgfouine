@@ -31,4 +31,3 @@ class PostgreSQLStatementLine extends PostgreSQLQueryStartLine {
 	}
 }
 
-?>

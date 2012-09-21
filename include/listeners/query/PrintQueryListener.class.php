@@ -27,4 +27,3 @@ class PrintQueryListener extends QueryListener {
 	}
 }
 
-?>

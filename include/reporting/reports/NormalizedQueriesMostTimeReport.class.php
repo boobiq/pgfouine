@@ -72,4 +72,3 @@ class NormalizedQueriesMostTimeReport extends NormalizedReport {
 	}
 }
 
-?>

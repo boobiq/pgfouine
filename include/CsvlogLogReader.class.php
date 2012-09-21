@@ -59,4 +59,3 @@ class CsvlogLogReader extends GenericLogReader {
 	}
 }
 
-?>

@@ -74,4 +74,3 @@ class QueriesHistoryPerPidReport extends Report {
 	}
 }
 
-?>

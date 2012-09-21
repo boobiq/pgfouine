@@ -33,4 +33,3 @@ class PostgreSQLDetailLine extends PostgreSQLLogLine {
 	}
 }
 
-?>

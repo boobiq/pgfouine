@@ -72,4 +72,3 @@ class NormalizedQueriesSlowestAverageReport extends NormalizedReport {
 	}
 }
 
-?>

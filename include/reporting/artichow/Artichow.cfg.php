@@ -59,4 +59,3 @@ $fonts = array(
 	'DejaVuSans',
 );
 
-?>

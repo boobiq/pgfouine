@@ -86,4 +86,3 @@ class QueryLogObject extends LogObject {
 	}
 }
 
-?>

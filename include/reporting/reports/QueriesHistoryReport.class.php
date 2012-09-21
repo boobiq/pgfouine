@@ -73,4 +73,3 @@ class QueriesHistoryReport extends Report {
 	}
 }
 
-?>

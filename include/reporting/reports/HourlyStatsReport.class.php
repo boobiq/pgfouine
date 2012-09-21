@@ -595,4 +595,3 @@ class HourlyStatsReport extends Report {
 	}
 }
 
-?>

@@ -21,4 +21,3 @@ class TestGenericLogReader extends UnitTestCase {
 	
 }
 
-?>

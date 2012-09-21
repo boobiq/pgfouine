@@ -72,4 +72,3 @@ class HourlyCountersListener extends QueryListener {
 	}
 }
 
-?>

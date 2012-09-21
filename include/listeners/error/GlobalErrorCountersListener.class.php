@@ -33,4 +33,3 @@ class GlobalErrorCountersListener extends ErrorListener {
 	}
 }
 
-?>

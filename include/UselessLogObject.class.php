@@ -31,4 +31,3 @@ class UselessLogObject extends LogObject {
 	}
 }
 
-?>

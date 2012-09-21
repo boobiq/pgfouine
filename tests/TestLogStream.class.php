@@ -28,4 +28,3 @@ class TestLogStream extends UnitTestCase {
 	}
 }
 
-?>

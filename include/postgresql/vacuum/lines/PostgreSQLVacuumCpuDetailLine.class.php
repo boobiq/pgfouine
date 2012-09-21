@@ -42,4 +42,3 @@ class PostgreSQLVacuumCpuDetailLine extends PostgreSQLVacuumLogLine {
 	}
 }
 
-?>

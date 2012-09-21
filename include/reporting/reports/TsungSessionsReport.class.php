@@ -82,4 +82,3 @@ class TsungSessionsReport extends Report {
 	}
 }
 
-?>

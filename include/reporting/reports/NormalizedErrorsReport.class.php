@@ -92,4 +92,3 @@ class NormalizedErrorsReport extends Report {
 	}
 } 
 
-?>

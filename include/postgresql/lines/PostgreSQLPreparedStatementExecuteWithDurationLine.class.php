@@ -41,4 +41,3 @@ class PostgreSQLPreparedStatementExecuteWithDurationLine extends PostgreSQLPrepa
 	}
 }
 
-?>

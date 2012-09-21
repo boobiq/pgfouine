@@ -186,4 +186,3 @@ class TestLogFiles extends UnitTestCase {
 	}
 }
 
-?>

@@ -206,4 +206,3 @@ class VacuumTableLogObject extends VacuumLogObject {
 	}
 }
 
-?>

@@ -44,4 +44,3 @@ $postgresqlTests->run(new TextReporter());
 
 fclose($stderr);
 
-?>

@@ -87,4 +87,3 @@ class VacuumOverallReport extends Report {
 	}
 }
 
-?>

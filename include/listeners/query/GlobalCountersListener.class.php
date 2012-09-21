@@ -120,4 +120,3 @@ class GlobalCountersListener extends QueryListener {
 	}
 }
 
-?>

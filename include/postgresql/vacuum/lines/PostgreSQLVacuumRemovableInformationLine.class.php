@@ -42,4 +42,3 @@ class PostgreSQLVacuumRemovableInformationLine extends PostgreSQLVacuumLogLine {
 	}
 }
 
-?>

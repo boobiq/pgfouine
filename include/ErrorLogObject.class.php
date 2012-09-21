@@ -88,4 +88,3 @@ class ErrorLogObject extends LogObject {
 	}
 }
 
-?>

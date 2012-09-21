@@ -126,4 +126,3 @@ class PostgreSQLVacuumParser extends PostgreSQLParser {
 	}
 }
 
-?>

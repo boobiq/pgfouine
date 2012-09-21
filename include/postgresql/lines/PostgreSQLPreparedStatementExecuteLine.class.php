@@ -83,4 +83,3 @@ class PostgreSQLPreparedStatementExecuteLine extends PostgreSQLLogLine {
 	}
 }
 
-?>

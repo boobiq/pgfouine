@@ -95,4 +95,3 @@ class NormalizedReport extends Report {
 	}
 } 
 
-?>

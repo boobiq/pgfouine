@@ -81,4 +81,3 @@ class PostgreSQLAccumulator extends Accumulator {
 	}
 }
 
-?>

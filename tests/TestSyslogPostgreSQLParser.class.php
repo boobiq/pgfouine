@@ -96,4 +96,3 @@ class TestSyslogPostgreSQLParser extends UnitTestCase {
 	}
 }
 
-?>

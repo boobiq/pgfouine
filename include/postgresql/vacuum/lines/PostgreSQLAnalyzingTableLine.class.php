@@ -38,4 +38,3 @@ class PostgreSQLAnalyzingTableLine extends PostgreSQLVacuumLogLine {
 	}
 }
 
-?>

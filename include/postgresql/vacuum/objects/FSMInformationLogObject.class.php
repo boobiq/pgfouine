@@ -83,4 +83,3 @@ class FSMInformationLogObject extends VacuumLogObject {
 	}
 }
 
-?>

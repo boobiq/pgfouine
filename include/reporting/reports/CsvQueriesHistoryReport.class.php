@@ -66,4 +66,3 @@ class CsvQueriesHistoryReport extends Report {
 	}
 }
 
-?>

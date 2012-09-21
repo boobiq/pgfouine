@@ -43,4 +43,3 @@ class TextReportAggregator extends ReportAggregator {
 	}
 }
 
-?>

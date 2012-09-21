@@ -93,4 +93,3 @@ class FSMInformationReport extends Report {
 	}
 }
 
-?>

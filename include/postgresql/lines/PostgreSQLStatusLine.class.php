@@ -43,4 +43,3 @@ class PostgreSQLStatusLine extends PostgreSQLLogLine {
 	}
 }
 
-?>

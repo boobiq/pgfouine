@@ -39,4 +39,3 @@ class PostgreSQLVacuumOperationInformationLine extends PostgreSQLVacuumLogLine {
 	}
 }
 
-?>

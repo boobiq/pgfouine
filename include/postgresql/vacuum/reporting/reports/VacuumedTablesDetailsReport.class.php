@@ -96,4 +96,3 @@ class VacuumedTablesDetailsReport extends Report {
 	}
 }
 
-?>

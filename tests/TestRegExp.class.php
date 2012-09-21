@@ -35,4 +35,3 @@ class TestRegExp extends UnitTestCase {
 	}
 }
 
-?>

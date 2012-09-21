@@ -35,4 +35,3 @@ class PostgreSQLVacuumContinuationLine extends PostgreSQLVacuumLogLine {
 	}
 }
 
-?>

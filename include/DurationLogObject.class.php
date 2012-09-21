@@ -38,4 +38,3 @@ class DurationLogObject extends LogObject {
 	}
 }
 
-?>

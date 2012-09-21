@@ -46,4 +46,3 @@ class TestSlowestQueryList extends UnitTestCase {
 	}
 }
 
-?>

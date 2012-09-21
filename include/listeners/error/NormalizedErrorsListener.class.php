@@ -60,4 +60,3 @@ class NormalizedErrorsListener extends ErrorListener {
 	}
 }
 
-?>

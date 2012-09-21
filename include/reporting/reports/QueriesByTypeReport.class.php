@@ -98,4 +98,3 @@ class QueriesByTypeReport extends Report {
 	}
 }
 
-?>

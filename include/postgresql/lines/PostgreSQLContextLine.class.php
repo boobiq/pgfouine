@@ -57,4 +57,3 @@ class PostgreSQLContextLine extends PostgreSQLLogLine {
 	}
 }
 
-?>

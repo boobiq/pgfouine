@@ -88,4 +88,3 @@ class SyslogPostgreSQLParser extends PostgreSQLParser {
 	}
 }
 
-?>

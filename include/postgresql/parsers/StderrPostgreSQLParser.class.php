@@ -87,4 +87,3 @@ class StderrPostgreSQLParser extends PostgreSQLParser {
 	}
 }
 
-?>

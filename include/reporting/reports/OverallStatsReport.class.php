@@ -98,4 +98,3 @@ class OverallStatsReport extends Report {
 	}
 }
 
-?>
