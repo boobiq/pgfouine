@@ -23,52 +23,54 @@
 
 class TsungSessionsReport extends Report {
 	function TsungSessionsReport(& $reportAggregator) {
-		$this->Report($reportAggregator, 'Tsung sessions', array('TsungSessionsListener'), false);
+		$this->Report($reportAggregator, 'Tsung sessions', array('QueriesHistoryListener'), false);
 	}
-	
+
 	function dumpText($file) {
-		$listener =& $this->reportAggregator->getListener('TsungSessionsListener');
-		$sessions =& $listener->getSessions();
-		$sessionsCount = count($sessions);
+		$listener =& $this->reportAggregator->getListener('QueriesHistoryListener');
+		$queries =& $listener->getQueriesHistoryPerConnection();
+		$sessionsCount = $listener->getConnectionCount();
 		$probabilityLeft = 100;
 		
 		fwrite($file, '<sessions>'."\n");
 		
-		for($i = 0; $i < $sessionsCount; $i++) {
-			if($i == ($sessionsCount - 1)) {
-				$currentProbability = $probabilityLeft;
+		$lastConnectionId = null;
+		$firstQueryInSession = null;
+
+		$connection_index = 0;
+		foreach ($queries as $query) {
+			$connectionId = $query->getConnectionId();
+			if ($lastConnectionId !== $connectionId) {
+				if ($lastConnectionId !== null) {
+					fwrite($file, "\t".'</session>'."\n");
+					$connection_index++;
+				}
+
+				$lastConnectionId = $connectionId;
+				$prevQueryInSession = null;
+
+				if($connection_index == ($sessionsCount - 1)) {
+					$currentProbability = $probabilityLeft;
+				} else {
+					$currentProbability = (int) (100 / $sessionsCount);
+					$probabilityLeft -= $currentProbability;
+				}
+				fwrite($file, "\t".'<session name="pgfouine-'.$connectionId.'" probability="'.$currentProbability.'" type="ts_pgsql">'."\n");
+			}
+
+			if($prevQueryInSession === null) {
+				fwrite($file, "\t\t".'<request><pgsql type="connect" database="'.$query->getDatabase().'" username="'.$query->getUser().'" /></request>'."\n");
 			} else {
-				$currentProbability = (int) (100 / $sessionsCount);
-				$probabilityLeft -= $currentProbability;
-			}
-			
-			$connectionId = key($sessions);
-			$queries =& current($sessions);
-			$queriesCount = count($queries);
-			$text = "\t".'<session name="pgfouine-'.$connectionId.'" probability="'.$currentProbability.'" type="ts_pgsql">'."\n";
-			
-			for($j = 0; $j < $queriesCount; $j++) {
-				$query =& $queries[$j];
-				if($j == 0) {
-					$text .= "\t\t".'<request><pgsql type="connect" database="'.$query->getDatabase().'" username="'.$query->getUser().'" /></request>'."\n";
+				$thinkTime = (int) ($query->getTimestamp() - ($prevQueryInSession->getTimestamp() + $prevQueryInSession->getDuration()));
+				if($thinkTime >= 1) {
+					fwrite($file, "\t\t".'<thinktime random="true" value="'.$thinkTime.'" />'."\n");
 				}
-				if(isset($lastQuery)) {
-					$thinkTime = (int) ($query->getTimestamp() - ($lastQuery->getTimestamp() + $lastQuery->getDuration()));
-					if($thinkTime >= 1) {
-						$text .= "\t\t".'<thinktime random="true" value="'.$thinkTime.'" />'."\n";
-					}
-					unset($lastQuery);
-				}
-				$text .= "\t\t".'<request><pgsql type="sql"><![CDATA['.$query->getText().']]></pgsql></request>'."\n";
-				
-				$lastQuery =& $query;
-				unset($query);
 			}
-			
-			$text .= "\t".'</session>'."\n";
-			fwrite($file, $text);
-			next($sessions);
+			fwrite($file, "\t\t".'<request><pgsql type="sql"><![CDATA['.$query->getText().']]></pgsql></request>'."\n");			
+			$prevQueryInSession = $query;
 		}
+		
+		fwrite($file, "\t".'</session>'."\n");
 		
 		fwrite($file, '</sessions>'."\n");
 	}

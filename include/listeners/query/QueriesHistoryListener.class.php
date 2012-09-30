@@ -73,6 +73,11 @@ class QueriesHistoryListener extends QueryListener {
 		$result = $this->db->query('SELECT data FROM log ORDER BY connection_id ASC');
 		return new DBResultIterator($result);
 	}
+
+	function getConnectionCount() {
+		$this->ensureCommit();
+		return $this->db->querySingle('SELECT COUNT(DISTINCT connection_id) FROM log');
+	}
 }
 
 class DBResultIterator implements Iterator {
