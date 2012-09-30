@@ -22,7 +22,6 @@
  */
 
 class QueriesHistoryListener extends QueryListener {
-	var $queries = array();
 	var $counter = 0;
 	var $bulk = 10000;
 
