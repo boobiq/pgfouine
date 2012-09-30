@@ -1,3 +1,7 @@
+2012-10-01 Denis Orlikhin <qbikk@yandex.ru>
+
+	* much lower memory usage
+
 2011-01-20 Denis Orlikhin <qbikk@yandex.ru>
 
 	* PostgreSQL comments normalization added
