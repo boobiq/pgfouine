@@ -75,6 +75,7 @@ function usage($error = false) {
   -quiet                                 quiet mode
   -debug                                 debug mode
   -profile                               profile mode
+  -tz                                    time zone, default UTC
   -help                                  this help
 ';
 	if($error) {
@@ -143,6 +144,12 @@ for($i = 0; $i < $argvCount; $i++) {
 	} else {
 		usage('invalid options format');
 	}
+}
+
+if (isset($options['tz'])) {
+	date_default_timezone_set($options['tz']);
+} else {
+	date_default_timezone_set('UTC');
 }
 
 if(isset($options['memorylimit']) && ((int) $options['memorylimit']) > 0) {
